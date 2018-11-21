@@ -8,3 +8,7 @@ build/
 ios/.generated/
 ios/Flutter/Generated.xcconfig
 ios/Runner/GeneratedPluginRegistrant.*
+android/local.properties
+simple_net_image.iml
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+test/simple_net_image_test.dart
