@@ -10,13 +10,13 @@ You can easily use this library to build a network load gallery, you can build d
 ok_image: ^0.0.1
 ```
 
-1. import
+2. import
 
 ```dart
 import "package:ok_image/ok_image.dart";
 ```
 
-1. use
+3. use
 
 ```dart
 import "package:ok_image/ok_image.dart";
@@ -31,7 +31,7 @@ createWidget(){
 }
 ```
 
-1. params
+4. params
 
 ```markdown
 url: image net url
