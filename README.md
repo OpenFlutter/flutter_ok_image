@@ -5,18 +5,18 @@ You can easily use this library to build a network load gallery, you can build d
 ## use
 
 1. add to your pubspec.yaml
-```yaml
 
-  ok_image: ^0.0.1
+```yaml
+ok_image: ^0.0.1
 ```
 
-2. import 
+1. import
 
 ```dart
 import "package:ok_image/ok_image.dart";
 ```
 
-3. use`
+1. use
 
 ```dart
 import "package:ok_image/ok_image.dart";
@@ -31,8 +31,9 @@ createWidget(){
 }
 ```
 
-4. params
-```
+1. params
+
+```markdown
 url: image net url
 width: width
 height: height
