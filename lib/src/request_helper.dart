@@ -2,10 +2,8 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart';
+import 'package:ok_image/src/cache_delegate.dart';
 import 'package:rxdart/rxdart.dart';
-
-var client = IOClient();
 
 class RequestHelper {
   static Future<Uint8List> requestImage(
@@ -13,17 +11,13 @@ class RequestHelper {
     int retry,
     Duration duration, {
     bool followRedirects = false,
+    CacheDelegate cacheDelegate,
   }) async {
     Completer<Uint8List> completer = Completer();
 
     Observable.retry(
       () {
-        return Stream.fromFuture(
-          _requestImage(
-            url,
-            followRedirects: followRedirects,
-          ),
-        );
+        return _createStream(url, followRedirects, cacheDelegate);
       },
       retry,
     ).timeout(
@@ -52,6 +46,21 @@ class RequestHelper {
     return completer.future;
   }
 
+  static Stream<Uint8List> _createStream(
+      String url, bool followRedirects, CacheDelegate cacheDelegate) {
+    if (cacheDelegate != null) {
+      return Stream.fromFuture(
+          cacheDelegate(url, followRedirects: followRedirects));
+    }
+
+    return Stream.fromFuture(
+      _requestImage(
+        url,
+        followRedirects: followRedirects,
+      ),
+    );
+  }
+
   static Future<Uint8List> _requestImage(
     String url, {
     ProgressHandler handler,
@@ -60,7 +69,7 @@ class RequestHelper {
     var completer = Completer<Uint8List>();
     var baseRequest = http.Request("GET", Uri.parse(url));
     baseRequest.followRedirects = followRedirects;
-    var streamResponse = await client.send(baseRequest);
+    var streamResponse = await baseRequest.send();
 
     await Future.delayed(Duration(seconds: 2));
 
@@ -93,6 +102,8 @@ class ImageCodeError extends Error {
 
 typedef ProgressHandler(double progress);
 
+var _isLog = false;
+
 _log(Object msg) {
-  print(msg ?? "null");
+  if (_isLog) print(msg ?? "null");
 }

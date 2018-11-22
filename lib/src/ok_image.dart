@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ok_image/src/cache_delegate.dart';
 import 'package:ok_image/src/request_helper.dart';
 
 class OKImage extends StatefulWidget {
@@ -12,6 +14,9 @@ class OKImage extends StatefulWidget {
   final Widget errorWidget;
   final int retry;
   final Duration timeout;
+  final Function onErrorTap;
+  final CacheDelegate cacheDelegate;
+  final bool followRedirects;
 
   const OKImage({
     Key key,
@@ -21,27 +26,30 @@ class OKImage extends StatefulWidget {
     this.loadingWidget,
     this.errorWidget,
     this.retry = 5,
-    this.boxFit,
+    BoxFit fit,
     this.timeout = const Duration(seconds: 15),
-  }) : super(key: key);
+    this.onErrorTap,
+    this.cacheDelegate,
+    this.followRedirects = false,
+  })  : boxFit = fit ?? BoxFit.cover,
+        super(key: key);
 
   @override
   _OKImageState createState() => _OKImageState();
 }
 
 class _OKImageState extends State<OKImage> {
-  Widget get loadingWidget =>
-      widget.loadingWidget ??
-      Container(
-        width: widget.width,
-        height: widget.height,
-      );
+  Widget get loadingWidget => widget.loadingWidget ?? ProgressWidget();
 
   Widget errorWidget(err) =>
       widget.errorWidget ??
       Container(
         child: ErrorWidget(err),
       );
+
+  double get width => widget.width;
+
+  double get height => widget.height;
 
   @override
   void initState() {
@@ -56,18 +64,71 @@ class _OKImageState extends State<OKImage> {
         widget.url,
         widget.retry,
         widget.timeout,
+        cacheDelegate: widget.cacheDelegate,
+        followRedirects: widget.followRedirects,
       ),
     );
   }
 
   Widget _buildImage(BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
+    Widget w;
     if (snapshot.hasError) {
-      return errorWidget(snapshot.error);
-    }
-    if (snapshot.data != null) {
-      return Image.memory(snapshot.data);
+      w = errorWidget(snapshot.error);
+      w = wrapErrorTap(w);
+    } else if (snapshot.data != null) {
+      w = Image.memory(
+        snapshot.data,
+        fit: widget.boxFit,
+      );
+    } else {
+      w = loadingWidget;
     }
 
-    return loadingWidget;
+    return SizedBox(
+      width: width,
+      height: height,
+      child: w,
+    );
+  }
+
+  Widget wrapErrorTap(Widget child) {
+    if (widget.onErrorTap == null) {
+      return child;
+    }
+    return GestureDetector(
+      onTap: widget.onErrorTap,
+      behavior: HitTestBehavior.translucent,
+      child: child,
+    );
+  }
+}
+
+class ProgressWidget extends StatelessWidget {
+  final double width;
+  final double height;
+
+  const ProgressWidget({
+    Key key,
+    this.width = 40.0,
+    this.height = 40.0,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Widget w;
+    var platform = Theme.of(context).platform;
+    if (platform == TargetPlatform.iOS) {
+      w = CupertinoActivityIndicator();
+    } else {
+      w = CircularProgressIndicator();
+    }
+
+    return Container(
+      child: SizedBox(
+        child: w,
+        width: width,
+        height: height,
+      ),
+    );
   }
 }
