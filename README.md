@@ -46,3 +46,10 @@ timeout: timeout duration.
 onErrorTap: when loadErrorWidget show ,onTap it.
 cacheDelegate: you can use the param to delegate loadImage
 ```
+
+
+## about other library
+This library uses [http](https://pub.dartlang.org/packages/http) as a framework for network access.  
+Using [rxdart](https://pub.dartlang.org/packages/rxdart) processing logic
+
+thanks to open source.
