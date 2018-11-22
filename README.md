@@ -1,13 +1,13 @@
 # OKImage
 
-You can easily use this library to build a network load gallery, you can build different layouts according to the error/load, you can also set up the image cache delegation.
+Easy to use this library to build a network image widget, you can build different layouts according to the error/load, also set up the image cache delegate.
 
 ## use
 
 1. add to your pubspec.yaml
 
 ```yaml
-ok_image: ^0.0.1
+ok_image: ^0.0.2
 ```
 
 2. import
