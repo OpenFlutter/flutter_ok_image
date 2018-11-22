@@ -48,17 +48,26 @@ class RequestHelper {
 
   static Stream<Uint8List> _createStream(
       String url, bool followRedirects, CacheDelegate cacheDelegate) {
-    if (cacheDelegate != null) {
-      return Stream.fromFuture(
-          cacheDelegate(url, followRedirects: followRedirects));
-    }
+    Future<Uint8List> future;
 
-    return Stream.fromFuture(
-      _requestImage(
+    Future<Uint8List> createDefault() {
+      return _requestImage(
         url,
         followRedirects: followRedirects,
-      ),
-    );
+      );
+    }
+
+    if (cacheDelegate != null) {
+      future = cacheDelegate(
+        url,
+        createDefault,
+        followRedirects: followRedirects,
+      );
+    } else {
+      future = createDefault();
+    }
+
+    return Stream.fromFuture(future);
   }
 
   static Future<Uint8List> _requestImage(

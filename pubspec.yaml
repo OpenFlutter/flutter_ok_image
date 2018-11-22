@@ -1,8 +1,8 @@
 name: ok_image
 description: A new Flutter package project.
 version: 0.0.1
-author:
-homepage:
+author: caijinglong<cjl_spy@163.com>
+homepage: https://github.com/CaiJingLong/flutter_ok_image
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
