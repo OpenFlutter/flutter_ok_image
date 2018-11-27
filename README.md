@@ -7,7 +7,7 @@ Easy to use this library to build a network image widget, you can build differen
 1. add to your pubspec.yaml
 
 ```yaml
-ok_image: ^0.0.2
+ok_image: ^0.0.3
 ```
 
 2. import
@@ -47,8 +47,8 @@ onErrorTap: when loadErrorWidget show ,onTap it.
 cacheDelegate: you can use the param to delegate loadImage
 ```
 
-
 ## about other library
+
 This library uses [http](https://pub.dartlang.org/packages/http) as a framework for network access.  
 Using [rxdart](https://pub.dartlang.org/packages/rxdart) processing logic
 
