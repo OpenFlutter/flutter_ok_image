@@ -64,6 +64,17 @@ class _OKImageState extends State<OKImage> {
   Widget build(BuildContext context) {
     CacheDelegate delegate = widget.cacheDelegate ?? defaultCache;
 
+    if (isDownload(widget.url)) {
+      return SizedBox(
+        width: width,
+        height: height,
+        child: Image.memory(
+          getImageBytes(widget.url),
+          fit: widget.boxFit,
+        ),
+      );
+    }
+
     return FutureBuilder<Uint8List>(
       builder: _buildImage,
       future: RequestHelper.requestImage(

@@ -8,3 +8,12 @@ Future<Uint8List> defaultCache(String url, DefaultFuture createDefaultFuture, {b
   await icm.init();
   return icm.getImageBytes(url);
 }
+
+Uint8List getImageBytes(String url) {
+  var icm = ImageCacheManager();
+  if (!icm.isInit) return null;
+
+  return icm.getImageBytesSync(url);
+}
+
+bool isDownload(String url) => ImageCacheManager().isInit && ImageCacheManager().isDownload(url);

@@ -23,6 +23,8 @@ class ImageCacheManager {
     imgDir = await _imgDir;
   }
 
+  bool get isInit => imgDir != null;
+
   Future<Uint8List> getImageBytes(String url) async {
     var targetDir = imgDir;
     var file = await dm.requestImage(url, targetDir);
@@ -47,5 +49,13 @@ class ImageCacheManager {
 
   File getLocalFile(String url) {
     return dm.getLocalFile(url, imgDir);
+  }
+
+  Uint8List getImageBytesSync(String url) {
+    if (!isDownload(url)) {
+      return null;
+    }
+
+    return Uint8List.fromList(getLocalFile(url).readAsBytesSync());
   }
 }
