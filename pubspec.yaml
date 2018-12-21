@@ -1,6 +1,6 @@
 name: ok_image
 description: Easy to use this library to build a network image widget, you can build different layouts according to the error/load, also set up the image cache delegate.
-version: 0.0.3
+version: 0.1.0
 author: caijinglong<cjl_spy@163.com>
 homepage: https://github.com/Openflutter/flutter_ok_image
 
