@@ -2,8 +2,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ok_image/src/cache/cache_delegate.dart';
 import 'package:ok_image/src/cache/default_cache_delegate.dart';
-import 'package:ok_image/src/cache_delegate.dart';
+import 'package:ok_image/src/default_error_widget.dart';
 import 'package:ok_image/src/request_helper.dart';
 
 class OKImage extends StatefulWidget {
@@ -63,6 +64,17 @@ class _OKImageState extends State<OKImage> {
   @override
   Widget build(BuildContext context) {
     CacheDelegate delegate = widget.cacheDelegate ?? defaultCache;
+
+    if (isDownload(widget.url)) {
+      return SizedBox(
+        width: width,
+        height: height,
+        child: Image.memory(
+          getImageBytes(widget.url),
+          fit: widget.boxFit,
+        ),
+      );
+    }
 
     return FutureBuilder<Uint8List>(
       builder: _buildImage,
@@ -135,17 +147,6 @@ class ProgressWidget extends StatelessWidget {
         width: width,
         height: height,
       ),
-    );
-  }
-}
-
-class DefaultErrorWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Icon(
-      Icons.error,
-      size: 55.0,
-      color: Theme.of(context).primaryColor,
     );
   }
 }

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
-import 'package:ok_image/src/cache_delegate.dart';
+import 'package:ok_image/src/cache/cache_delegate.dart';
 import 'package:rxdart/rxdart.dart';
 
 class RequestHelper {
@@ -46,8 +46,7 @@ class RequestHelper {
     return completer.future;
   }
 
-  static Stream<Uint8List> _createStream(
-      String url, bool followRedirects, CacheDelegate cacheDelegate) {
+  static Stream<Uint8List> _createStream(String url, bool followRedirects, CacheDelegate cacheDelegate) {
     Future<Uint8List> future;
 
     Future<Uint8List> createDefault() {
