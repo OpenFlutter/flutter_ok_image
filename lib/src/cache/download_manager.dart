@@ -46,7 +46,8 @@ class DownloadManager {
         print("删除临时文件");
         _downloadStreamController.add(url);
       } else {
-        _downloadStreamController.addError(DownloadError("download error", StateError("code = ${response.statusCode}")));
+        _downloadStreamController.addError(DownloadError(
+            "download error", StateError("code = ${response.statusCode}")));
         print("$url 不存在");
       }
     } catch (e) {
@@ -72,7 +73,8 @@ class DownloadManager {
   void onError(String url, Error error) {
     futures.toList().forEach((future) {
       if (future.url == url) {
-        future.completer.completeError(DownloadError("download error", error, error.stackTrace));
+        future.completer.completeError(
+            DownloadError("download error", error, error.stackTrace));
         futures.remove(future);
       }
     });
@@ -127,7 +129,7 @@ String _getTmpPath(File targetFile) {
 
 bool exists(String url, Directory targetDir) {
   File targetFile = _downloadFilePath(url, targetDir);
-  return File(_getTmpPath(targetFile)).existsSync();
+  return targetFile.existsSync();
 }
 
 File getLocalFile(String url, Directory targetDir) {
