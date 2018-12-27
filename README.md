@@ -53,6 +53,10 @@ cacheDelegate: you can use the param to delegate loadImage
 
 5. global config
 
+edit `OKImage.buildErrorWidget` to config global OKImage errorWidget.
+
+edit `OKImage.buildLoadingWidget` to config global OKImage loading.
+
 ## about other library
 
 This library uses [http 0.12.0](https://pub.dartlang.org/packages/http) as a framework for network access.  
