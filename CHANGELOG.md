@@ -1,6 +1,17 @@
 # CHANGELOG
 
+## [0.2.0]
+
+global error and loading widget
+
+add a clear cache method
+
+upgrade rxdart version
+
+fix bug for downloading
+
 ## [0.1.1] fix load bug
+
 fix error bug
 
 ## [0.1.0] update request and cache

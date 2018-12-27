@@ -5,7 +5,7 @@ import 'dart:typed_data';
 
 import 'package:path_provider/path_provider.dart';
 
-import 'download_manager.dart' as dm hide print;
+import 'download_manager.dart' as dm;
 
 class ImageCacheManager {
   static ImageCacheManager _instance;
@@ -57,5 +57,12 @@ class ImageCacheManager {
     }
 
     return Uint8List.fromList(getLocalFile(url).readAsBytesSync());
+  }
+
+  Future clearAllCache() async {
+    await init();
+    for (var file in imgDir.listSync()) {
+      file.deleteSync(recursive: true);
+    }
   }
 }

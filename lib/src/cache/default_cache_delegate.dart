@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:ok_image/src/cache/cache_delegate.dart';
@@ -16,4 +17,11 @@ Uint8List getImageBytes(String url) {
   return icm.getImageBytesSync(url);
 }
 
-bool isDownload(String url) => ImageCacheManager().isInit && ImageCacheManager().isDownload(url);
+bool isDownloaded(String url) => ImageCacheManager().isInit && ImageCacheManager().isDownload(url);
+
+File getCacheImageFile(String url) {
+  if (!isDownloaded(url)) {
+    return null;
+  }
+  return ImageCacheManager().getLocalFile(url);
+}

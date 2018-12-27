@@ -20,6 +20,9 @@ class OKImage extends StatefulWidget {
   final CacheDelegate cacheDelegate;
   final bool followRedirects;
 
+  static ValueGetter<Widget> buildErrorWidget = () => DefaultErrorWidget();
+  static ValueGetter<Widget> buildLoadingWidget = () => ProgressWidget();
+
   const OKImage({
     Key key,
     @required this.url,
@@ -41,15 +44,12 @@ class OKImage extends StatefulWidget {
 }
 
 class _OKImageState extends State<OKImage> {
-  Widget get loadingWidget => widget.loadingWidget ?? ProgressWidget();
+  Widget get loadingWidget => widget.loadingWidget ?? OKImage.buildLoadingWidget();
 
-  Widget errorWidget(err) =>
-      widget.errorWidget ??
-      Container(
+  Widget errorWidget(err) => Container(
         width: width,
         height: height,
-        color: Colors.grey.withOpacity(0.6),
-        child: DefaultErrorWidget(),
+        child: widget.errorWidget ?? OKImage.buildErrorWidget(),
       );
 
   double get width => widget.width;
@@ -65,12 +65,12 @@ class _OKImageState extends State<OKImage> {
   Widget build(BuildContext context) {
     CacheDelegate delegate = widget.cacheDelegate ?? defaultCache;
 
-    if (isDownload(widget.url)) {
+    if (isDownloaded(widget.url)) {
       return SizedBox(
         width: width,
         height: height,
-        child: Image.memory(
-          getImageBytes(widget.url),
+        child: Image.file(
+          getCacheImageFile(widget.url),
           fit: widget.boxFit,
         ),
       );
