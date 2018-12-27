@@ -5,6 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:http/io_client.dart' as io_client;
 import 'package:ok_image/src/cache/download_error.dart';
 import 'package:ok_image/src/cache/download_future.dart';
+import 'package:ok_image/src/util/log.dart';
 
 //import 'package:http/http.dart' as http;
 
@@ -23,10 +24,19 @@ class DownloadManager {
     return _instance;
   }
 
+  bool isDownloading(String url) {
+    for (var future in futures) {
+      if (future.url == url) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   void tryDownload(String url, File targetFile) async {
     io_client.IOClient client = io_client.IOClient(); //确定下载再创建client
 
-    if (File(_getTmpPath(targetFile)).existsSync()) {
+    if (isDownloading(url)) {
       return;
     }
 
@@ -37,18 +47,14 @@ class DownloadManager {
       var response = await client.get(url);
       if (response.statusCode == 200 && !response.isRedirect) {
         var bytes = response.bodyBytes;
-        print("下载完成");
+        Log.log("下载完成");
         // 成功,先写tmp文件中
         await targetFile.writeAsBytes(bytes);
-        print("写入完成");
-        // 写完后删除临时文件
-        tmpFile.deleteSync();
-        print("删除临时文件");
+        Log.log("写入完成");
         _downloadStreamController.add(url);
       } else {
-        _downloadStreamController.addError(DownloadError(
-            "download error", StateError("code = ${response.statusCode}")));
-        print("$url 不存在");
+        _downloadStreamController.addError(DownloadError("download error", StateError("code = ${response.statusCode}")));
+        Log.log("$url 不存在");
       }
     } catch (e) {
       if (e is Exception) {
@@ -57,6 +63,9 @@ class DownloadManager {
         _downloadStreamController.addError(DownloadError("download error", e));
       }
     } finally {
+      // 写完后删除临时文件
+      tmpFile.deleteSync();
+      Log.log("删除临时文件");
       client.close();
     }
   }
@@ -73,8 +82,7 @@ class DownloadManager {
   void onError(String url, Error error) {
     futures.toList().forEach((future) {
       if (future.url == url) {
-        future.completer.completeError(
-            DownloadError("download error", error, error.stackTrace));
+        future.completer.completeError(DownloadError("download error", error, error.stackTrace));
         futures.remove(future);
       }
     });
@@ -82,14 +90,15 @@ class DownloadManager {
 
   Future<String> waitForDownloadResult(String url, File targetFile) {
     Completer<String> completer = Completer();
-    futures.add(DownloadFuture(url, completer));
     tryDownload(url, targetFile);
+    futures.add(DownloadFuture(url, completer));
     return completer.future;
   }
 }
 
 Future<File> requestImage(String url, Directory targetDir) async {
   File targetFile = _downloadFilePath(url, targetDir);
+  Log.log("下载文件为 $targetFile");
 
   bool isDownloaded() {
     var tmpPath = _getTmpPath(targetFile);
@@ -104,9 +113,11 @@ Future<File> requestImage(String url, Directory targetDir) async {
   // }
 
   if (isDownloaded()) {
-    print("文件已下载,直接返回缓存");
+    Log.log("文件已下载,直接返回缓存");
     return targetFile;
   }
+
+  Log.log("图片未下载,加入下载队列");
 
   await DownloadManager().waitForDownloadResult(url, targetFile);
   return targetFile;
@@ -150,5 +161,3 @@ void removeTmpPath(String url, Directory targetDir) {
     targetFile.deleteSync();
   } catch (e) {} finally {}
 }
-
-print(Object obj) {}

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:ok_image/src/cache/cache_delegate.dart';
+import 'package:ok_image/src/util/log.dart';
 import 'package:rxdart/rxdart.dart';
 
 class RequestHelper {
@@ -13,27 +14,29 @@ class RequestHelper {
     bool followRedirects = false,
     CacheDelegate cacheDelegate,
   }) async {
+    Log.log("准备获取图片: $url");
     Completer<Uint8List> completer = Completer();
 
     Observable.retry(
       () {
+        Log.log("重试一下");
         return _createStream(url, followRedirects, cacheDelegate);
       },
       retry,
     ).timeout(
       duration,
       onTimeout: (sink) {
-        _log("超时了");
+        Log.log("超时了");
         completer.completeError(TimeoutError());
         sink.close();
       },
     ).listen(
       (data) {
-        _log("获取成功  图片大小 ${data.length}");
+        Log.log("获取成功  图片大小 ${data.length}");
         completer.complete(data);
       },
       onError: (err) {
-        _log("获取图片出错  $err");
+        Log.log("获取图片出错  $err");
         if (err is ImageCodeError) {
           completer.completeError(err);
         } else {
@@ -109,9 +112,3 @@ class ImageCodeError extends Error {
 }
 
 typedef ProgressHandler(double progress);
-
-var _isLog = false;
-
-_log(Object msg) {
-  if (_isLog) print(msg ?? "null");
-}
