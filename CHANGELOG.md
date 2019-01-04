@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.2.1] un-ext image load error
+
+Fix: Unextended images cannot be loaded
+
 ## [0.2.0]
 
 global error and loading widget
