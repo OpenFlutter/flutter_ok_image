@@ -125,6 +125,11 @@ Future<File> requestImage(String url, Directory targetDir) async {
 
 File _downloadFilePath(String url, Directory targetDir) {
   var name = md5.convert(url.codeUnits).toString();
+  var lastName = url.split("/").last;
+  if (!lastName.contains(".")) {
+    return File(targetDir.absolute.path + "/" + name);
+  }
+
   var extName = url.split("\.").last;
   var path = targetDir.absolute.path + "/" + "$name.$extName";
   var targetFile = File(path);
