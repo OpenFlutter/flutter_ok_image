@@ -51,6 +51,12 @@ onErrorTap: when loadErrorWidget show ,onTap it.
 cacheDelegate: you can use the param to delegate loadImage
 ```
 
+Experimental: Signatures, return values, parameters and other information may be modified in the future.
+
+```md
+onLoadStateChanged: will be call on the load state changed.
+```
+
 5. global config
 
 edit `OKImage.buildErrorWidget` to config global OKImage errorWidget.
