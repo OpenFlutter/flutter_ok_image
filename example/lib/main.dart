@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ok_image/ok_image.dart';
+import 'package:ok_image/src/util/log.dart' as OL;
 
 void main() => runApp(MyApp());
 
@@ -61,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    OL.Log.showLog = true;
     OKImage.buildErrorWidget = () => Center(
           child: Text("I'm error"),
         );
@@ -134,12 +136,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget buildNetImage({BoxFit fit}) {
     return OKImage(
-      url: "https://ws1.sinaimg.cn/large/844036b9ly1fxfo76hzd4j20zk0nc48i.jpg",
+      // url: "https://ws1.sinaimg.cn/large/844036b9ly1fxfo76hzd4j20zk0nc48i.jpg",
+      url: "http://avator.eastmoney.com/qface/3241045360517340/166",
 //      loadingWidget: CircularProgressIndicator(),
       width: 200,
       height: 200,
       timeout: Duration(seconds: 20),
       fit: fit,
+      onLoadStateChanged: _onLoadStateChange,
     );
+  }
+
+  void _onLoadStateChange(OnLoadState value) {
+    var now = DateTime.now();
+    print("$now : on load image state change : $value");
   }
 }

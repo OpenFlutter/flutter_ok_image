@@ -8,20 +8,47 @@ import 'package:ok_image/src/default_error_widget.dart';
 import 'package:ok_image/src/request_helper.dart';
 
 class OKImage extends StatefulWidget {
+  /// update error widget for global
+  static ValueGetter<Widget> buildErrorWidget = () => DefaultErrorWidget();
+
+  /// update loading widget for global
+  static ValueGetter<Widget> buildLoadingWidget = () => ProgressWidget();
+
+  /// net image url
   final String url;
+
+  /// like [Image.width]
   final double width;
+
+  /// like [Image.height]
   final double height;
+
+  /// like [Image.fit]
   final BoxFit boxFit;
+
+  /// loading widget
   final Widget loadingWidget;
+
+  /// on load error widget
   final Widget errorWidget;
+
+  /// Number of retries
   final int retry;
+
+  /// timeout for load
   final Duration timeout;
+
+  /// After an error occurs, click on the event
   final Function onErrorTap;
+
+  /// you can use your self cache delegate
   final CacheDelegate cacheDelegate;
+
+  /// When followRedirects occurs, whether to continue accessing or not, and when followRedirects occurs, false is regarded as a failure of accessing.
   final bool followRedirects;
 
-  static ValueGetter<Widget> buildErrorWidget = () => DefaultErrorWidget();
-  static ValueGetter<Widget> buildLoadingWidget = () => ProgressWidget();
+  /// Experimental , Callback when the loading state changes
+  final ValueChanged<OnLoadState> onLoadStateChanged;
 
   const OKImage({
     Key key,
@@ -36,6 +63,7 @@ class OKImage extends StatefulWidget {
     this.onErrorTap,
     this.cacheDelegate,
     this.followRedirects = false,
+    this.onLoadStateChanged,
   })  : boxFit = fit ?? BoxFit.cover,
         super(key: key);
 
@@ -56,16 +84,22 @@ class _OKImageState extends State<OKImage> {
 
   double get height => widget.height;
 
+  void _onLoadStateChanged(OnLoadState state) {
+    widget.onLoadStateChanged?.call(state);
+  }
+
   @override
   void initState() {
     super.initState();
+    _onLoadStateChanged(OnLoadState.loadStart);
   }
 
   @override
   Widget build(BuildContext context) {
     CacheDelegate delegate = widget.cacheDelegate ?? defaultCache;
 
-    if (isDownloaded(widget.url)) {
+    if (isDownloaded(widget.url) && (getCacheImageFile(widget.url)?.existsSync() == true)) {
+      _onLoadStateChanged(OnLoadState.loadEnd);
       return SizedBox(
         width: width,
         height: height,
@@ -93,13 +127,16 @@ class _OKImageState extends State<OKImage> {
     if (snapshot.hasError) {
       w = errorWidget(snapshot.error);
       w = wrapErrorTap(w);
+      _onLoadStateChanged(OnLoadState.loadFail);
     } else if (snapshot.data != null) {
       w = Image.memory(
         snapshot.data,
         fit: widget.boxFit,
       );
+      _onLoadStateChanged(OnLoadState.loadEnd);
     } else {
       w = loadingWidget;
+      _onLoadStateChanged(OnLoadState.loading);
     }
 
     return SizedBox(
@@ -149,4 +186,12 @@ class ProgressWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Experimental
+enum OnLoadState {
+  loadStart,
+  loading,
+  loadEnd,
+  loadFail,
 }

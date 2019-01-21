@@ -1,9 +1,9 @@
 class Log {
   Log._();
 
-  bool showLog = false;
+  static bool showLog = false;
 
   static void log(Object msg) {
-    print(msg ?? "null");
+    if (showLog == true) print(msg ?? "null");
   }
 }
