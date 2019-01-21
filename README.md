@@ -11,7 +11,7 @@ Easy to use this library to build a network image widget, you can build differen
 1. add to your pubspec.yaml
 
 ```yaml
-ok_image: ^0.2.1
+ok_image: ^0.2.2
 ```
 
 2. import

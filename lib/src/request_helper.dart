@@ -19,7 +19,7 @@ class RequestHelper {
 
     Observable.retry(
       () {
-        Log.log("重试一下");
+        Log.log("$url 试一下");
         return _createStream(url, followRedirects, cacheDelegate);
       },
       retry,

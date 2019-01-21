@@ -1,5 +1,6 @@
 library net_image;
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -59,10 +60,21 @@ class ImageCacheManager {
     return Uint8List.fromList(getLocalFile(url).readAsBytesSync());
   }
 
-  Future clearAllCache() async {
+  Future clearAllCache({Duration duration}) async {
     await init();
-    for (var file in imgDir.listSync()) {
-      file.deleteSync(recursive: true);
+    if (duration != null) {
+      var now = DateTime.now();
+      for (var file in imgDir.listSync()) {
+        var stat = file.statSync();
+        var compareDateTime = now.subtract(duration);
+        if (compareDateTime.isAfter(stat.accessed)) {
+          file.deleteSync(recursive: true);
+        }
+      }
+    } else {
+      for (var file in imgDir.listSync()) {
+        file.deleteSync(recursive: true);
+      }
     }
   }
 }

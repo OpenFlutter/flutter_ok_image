@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.2.2] request
+
+add a parameter to delete the cache whose last access time exceeds duration
+
+add onImageLoadState callback
+
 ## [0.2.1] un-ext image load error
 
 Fix: Unextended images cannot be loaded
