@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 typedef Future<Uint8List> DefaultFuture();

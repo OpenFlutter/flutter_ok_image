@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ok_image/ok_image.dart';
-import 'package:ok_image/src/util/log.dart' as OL;
+import 'package:ok_image/log.dart' as OL;
 
 void main() => runApp(MyApp());
 

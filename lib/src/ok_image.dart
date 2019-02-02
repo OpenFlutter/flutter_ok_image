@@ -72,7 +72,8 @@ class OKImage extends StatefulWidget {
 }
 
 class _OKImageState extends State<OKImage> {
-  Widget get loadingWidget => widget.loadingWidget ?? OKImage.buildLoadingWidget();
+  Widget get loadingWidget =>
+      widget.loadingWidget ?? OKImage.buildLoadingWidget();
 
   Widget errorWidget(err) => Container(
         width: width,
@@ -98,7 +99,8 @@ class _OKImageState extends State<OKImage> {
   Widget build(BuildContext context) {
     CacheDelegate delegate = widget.cacheDelegate ?? defaultCache;
 
-    if (isDownloaded(widget.url) && (getCacheImageFile(widget.url)?.existsSync() == true)) {
+    if (isDownloaded(widget.url) &&
+        (getCacheImageFile(widget.url)?.existsSync() == true)) {
       _onLoadStateChanged(OnLoadState.loadEnd);
       return SizedBox(
         width: width,
