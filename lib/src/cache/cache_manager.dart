@@ -77,4 +77,15 @@ class ImageCacheManager {
       }
     }
   }
+
+  /// remove file cache with url.
+  ///
+  /// If you load the specified URL at the same time, unexpected errors may occur
+  Future removeCache(String url) async {
+    await init();
+    var file = getLocalFile(url);
+    if (file.existsSync()) {
+      file.deleteSync();
+    }
+  }
 }

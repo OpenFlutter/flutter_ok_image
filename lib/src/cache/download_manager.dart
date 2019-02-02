@@ -53,7 +53,8 @@ class DownloadManager {
         Log.log("写入完成");
         _downloadStreamController.add(url);
       } else {
-        _downloadStreamController.addError(DownloadError("download error", StateError("code = ${response.statusCode}")));
+        _downloadStreamController.addError(DownloadError(
+            "download error", StateError("code = ${response.statusCode}")));
         Log.log("$url 不存在");
       }
     } catch (e) {
@@ -82,7 +83,8 @@ class DownloadManager {
   void onError(String url, Error error) {
     futures.toList().forEach((future) {
       if (future.url == url) {
-        future.completer.completeError(DownloadError("download error", error, error.stackTrace));
+        future.completer.completeError(
+            DownloadError("download error", error, error.stackTrace));
         futures.remove(future);
       }
     });

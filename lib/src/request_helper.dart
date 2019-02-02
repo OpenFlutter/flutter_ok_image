@@ -49,7 +49,8 @@ class RequestHelper {
     return completer.future;
   }
 
-  static Stream<Uint8List> _createStream(String url, bool followRedirects, CacheDelegate cacheDelegate) {
+  static Stream<Uint8List> _createStream(
+      String url, bool followRedirects, CacheDelegate cacheDelegate) {
     Future<Uint8List> future;
 
     Future<Uint8List> createDefault() {

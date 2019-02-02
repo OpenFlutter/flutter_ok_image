@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.2.3] add remove cache
+
+ImageCache.removeCache(String url);
+
 ## [0.2.2] request
 
 add a parameter to delete the cache whose last access time exceeds duration
