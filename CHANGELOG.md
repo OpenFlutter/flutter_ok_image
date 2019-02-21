@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.3.0] upgrade path_provider
+
+**breaking change**
+because path_provider migrate from android support to androidX, so your other plugin also need be migrated.
+upgrade rxdart
+
 ## [0.2.3] add remove cache
 
 ImageCache.removeCache(String url);
