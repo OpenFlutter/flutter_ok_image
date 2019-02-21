@@ -65,10 +65,10 @@ edit `OKImage.buildLoadingWidget` to config global OKImage loading.
 
 ## about other library
 
-This library uses [http 0.12.0](https://pub.dartlang.org/packages/http) as a framework for network access.  
-Using [rxdart 0.20.0](https://pub.dartlang.org/packages/rxdart) processing logic
+This library uses [http 0.12.0+1](https://pub.dartlang.org/packages/http) as a framework for network access.  
+Using [rxdart 0.21.0](https://pub.dartlang.org/packages/rxdart) processing logic
 
-using [path_provider 0.4.1](https://pub.dartlang.org/packages/path_provider) to get default catch path.
+using [path_provider 0.5.0+1](https://pub.dartlang.org/packages/path_provider) to get default catch path.
 using [crypto 2.0.6](https://pub.dartlang.org/packages/crypto) to make and check md5.
 
 thanks to open source.
