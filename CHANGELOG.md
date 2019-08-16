@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [0.4.0]
+
+**Breaking change**:
+Params `errorWidget` change type to `ErrorWidgetBuilder`.
+
+fix:
+
+- Download error bug.
+
 ## [0.3.1] upgrade dependencies version
 
 - path_provider

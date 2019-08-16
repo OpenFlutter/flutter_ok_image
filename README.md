@@ -12,7 +12,7 @@ Easy to use this library to build a network image widget, you can build differen
 1. add to your pubspec.yaml
 
 ```yaml
-ok_image: ^0.3.1
+ok_image: ^0.4.0
 ```
 
 2. import
@@ -66,14 +66,15 @@ edit `OKImage.buildLoadingWidget` to config global OKImage loading.
 
 ## about other library
 
-under BSD 3: 
+under BSD 3:
 
-1. This library uses [http 0.12.0+1](https://pub.dartlang.org/packages/http) as a framework for network access.  
-2. using [path_provider 0.5.0+1](https://pub.dartlang.org/packages/path_provider) to get default catch path.  
+1. This library uses [http 0.12.0+2](https://pub.dartlang.org/packages/http) as a framework for network access.
+2. using [path_provider 1.2.0](https://pub.dartlang.org/packages/path_provider) to get default catch path.
 3. using [crypto 2.0.6](https://pub.dartlang.org/packages/crypto) to make and check md5.
 
 Apache 2.0:
-1. Using [rxdart 0.21.0](https://pub.dartlang.org/packages/rxdart) processing logic  
+
+1. Using [rxdart 0.22.1](https://pub.dartlang.org/packages/rxdart) processing logic
 
 thanks to open source.
 
