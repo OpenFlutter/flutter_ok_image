@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.3.1] upgrade dependencies version
+
+- path_provider
+- rx_dart
+- http
+
 ## [0.3.0] upgrade path_provider
 
 **breaking change**
