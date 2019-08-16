@@ -6,6 +6,10 @@ import 'package:ok_image/src/cache/cache_delegate.dart';
 import 'package:ok_image/src/cache/default_cache_delegate.dart';
 import 'package:ok_image/src/default_error_widget.dart';
 import 'package:ok_image/src/request_helper.dart';
+import 'package:ok_image/src/cache/download_error.dart';
+
+/// error maybe [ImageCodeError] or [DownloadError]
+typedef ErrorWidgetBuilder(Object error);
 
 class OKImage extends StatefulWidget {
   /// update error widget for global
@@ -30,7 +34,7 @@ class OKImage extends StatefulWidget {
   final Widget loadingWidget;
 
   /// on load error widget
-  final Widget errorWidget;
+  final ErrorWidgetBuilder errorWidget;
 
   /// Number of retries
   final int retry;
@@ -78,7 +82,7 @@ class _OKImageState extends State<OKImage> {
   Widget errorWidget(err) => Container(
         width: width,
         height: height,
-        child: widget.errorWidget ?? OKImage.buildErrorWidget(),
+        child: widget.errorWidget?.call(err) ?? OKImage.buildErrorWidget(),
       );
 
   double get width => widget.width;
@@ -180,7 +184,7 @@ class ProgressWidget extends StatelessWidget {
       w = CircularProgressIndicator();
     }
 
-    return Container(
+    return Center(
       child: SizedBox(
         child: w,
         width: width,

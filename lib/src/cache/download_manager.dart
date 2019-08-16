@@ -12,15 +12,19 @@ import 'package:ok_image/src/util/log.dart';
 StreamController<String> _downloadStreamController = StreamController<String>();
 
 class DownloadManager {
-  static DownloadManager _instance = DownloadManager._();
+  static DownloadManager _instance;
 
   List<DownloadFuture> futures = [];
 
   DownloadManager._() {
-    _downloadStreamController.stream.listen(onReceive);
+    _downloadStreamController.stream.listen(
+      onReceive,
+      onError: _onDownloadStreamError,
+    );
   }
 
   factory DownloadManager() {
+    _instance ??= DownloadManager._();
     return _instance;
   }
 
@@ -36,9 +40,14 @@ class DownloadManager {
   void tryDownload(String url, File targetFile) async {
     io_client.IOClient client = io_client.IOClient(); //确定下载再创建client
 
+    Log.log("尝试下载 $url");
+
     if (isDownloading(url)) {
+      Log.log("下载中 $url ");
       return;
     }
+
+    Log.log("$url 准备下载中");
 
     // 先创建一个临时文件,用于告知
     var tmpFile = File(_getTmpPath(targetFile))..createSync();
@@ -53,15 +62,17 @@ class DownloadManager {
         Log.log("写入完成");
         _downloadStreamController.add(url);
       } else {
-        _downloadStreamController.addError(DownloadError(
-            "download error", StateError("code = ${response.statusCode}")));
+        var downloadError = DownloadError(
+            url, "download error", StateError("code = ${response.statusCode}"));
+        _downloadStreamController.addError(downloadError);
         Log.log("$url 不存在");
       }
     } catch (e) {
       if (e is Exception) {
         _downloadStreamController.addError(e);
       } else {
-        _downloadStreamController.addError(DownloadError("download error", e));
+        _downloadStreamController
+            .addError(DownloadError(url, "download error", e));
       }
     } finally {
       // 写完后删除临时文件
@@ -80,11 +91,24 @@ class DownloadManager {
     });
   }
 
-  void onError(String url, Error error) {
+  _onDownloadStreamError(Object error) {
+    if (error is DownloadError) {
+      onError(error.url, error);
+    } else {
+      onError(null, error);
+    }
+  }
+
+  void onError(String url, Object error) {
     futures.toList().forEach((future) {
       if (future.url == url) {
-        future.completer.completeError(
-            DownloadError("download error", error, error.stackTrace));
+        if (error is Error) {
+          future.completer.completeError(
+              DownloadError(url, "download error", error, error.stackTrace));
+        } else {
+          future.completer
+              .completeError(DownloadError(url, "download error", error, null));
+        }
         futures.remove(future);
       }
     });
